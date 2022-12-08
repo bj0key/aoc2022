@@ -49,7 +49,7 @@ def on_edge(data: list[list[int]], y: int, x: int) -> bool:
 
 
 def trees_in_direction(
-    data: list[list[int]], height: int, y: int, x: int, y_mod: int, x_mod: int
+    data: list[list[int]], height: int, y: int, x: int, y_mod: int, x_mod: int, **_
 ) -> int:
     def is_taller(i: int) -> bool:
         nx = x + (i * x_mod)
@@ -62,10 +62,10 @@ def trees_in_direction(
 
 def get_prettiness(data: list[list[int]], y: int, x: int) -> int:
     height = data[y][x]
-    dist_right = trees_in_direction(data, height, y, x, y_mod=0, x_mod=+1)
-    dist_left = trees_in_direction(data, height, y, x, y_mod=0, x_mod=-1)
-    dist_down = trees_in_direction(data, height, y, x, y_mod=+1, x_mod=0)
-    dist_up = trees_in_direction(data, height, y, x, y_mod=-1, x_mod=0)
+    dist_right = trees_in_direction(**locals(), y_mod=0, x_mod=+1)
+    dist_left = trees_in_direction(**locals(), y_mod=0, x_mod=-1)
+    dist_down = trees_in_direction(**locals(), y_mod=+1, x_mod=0)
+    dist_up = trees_in_direction(**locals(), y_mod=-1, x_mod=0)
     return dist_down * dist_left * dist_right * dist_up
 
 
