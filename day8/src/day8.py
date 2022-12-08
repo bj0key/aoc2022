@@ -1,4 +1,5 @@
-from itertools import count, product
+from itertools import count
+from typing import Callable, Generator
 
 with open("day8/input") as file:
     data = [[int(i) for i in l.strip()] for l in file.readlines()]
@@ -7,7 +8,7 @@ with open("day8/input") as file:
 # ========PART 1========
 
 
-def reverse_enumerate(lst: list):
+def reverse_enumerate(lst: list) -> Generator[tuple[int, int], None, None]:
     i = len(lst)
     for n in reversed(lst):
         i -= 1
@@ -16,14 +17,15 @@ def reverse_enumerate(lst: list):
 
 def make_visibility_mask(data: list[list[int]]) -> list[list[bool]]:
     visibility_mask = [[False] * len(row) for row in data]
-    for iterable in (enumerate, reverse_enumerate):
+    enumerators: list[Callable] = [enumerate, reverse_enumerate]
+    for iterable in enumerators:
         for i, row in enumerate(data):
             curr_max = -1
             for j, n in iterable(row):
                 if curr_max < n:
                     visibility_mask[i][j] = True
                     curr_max = n
-    for iterable in (enumerate, reverse_enumerate):
+    for iterable in enumerators:
         for j, col in enumerate(zip(*data)):
             curr_max = -1
             for i, n in iterable(col):
@@ -42,33 +44,28 @@ print(f"Part 1: {total_visible}")
 # ========PART 2========
 
 
-def on_edge(data: list[list[int]], y: int, x: int) -> int:
+def on_edge(data: list[list[int]], y: int, x: int) -> bool:
     return x == 0 or y == 0 or x == len(data) - 1 or y == len(data) - 1
+
+
+def trees_in_direction(
+    data: list[list[int]], height: int, y: int, x: int, y_mod: int, x_mod: int
+) -> int:
+    def is_taller(i: int) -> bool:
+        nx = x + (i * x_mod)
+        ny = y + (i * y_mod)
+        return on_edge(data, ny, nx) or (i != 0 and data[ny][nx] >= height)
+
+    # return inner
+    return next(filter(is_taller, count()))
 
 
 def get_prettiness(data: list[list[int]], y: int, x: int) -> int:
     height = data[y][x]
-    # look right
-    dist_right = next(
-        i
-        for i in count()
-        if on_edge(data, y, x + i) or (i != 0 and data[y][x + i] >= height)
-    )
-    dist_left = next(
-        i
-        for i in count()
-        if on_edge(data, y, x - i) or (i != 0 and data[y][x - i] >= height)
-    )
-    dist_down = next(
-        i
-        for i in count()
-        if on_edge(data, y + i, x) or (i != 0 and data[y + i][x] >= height)
-    )
-    dist_up = next(
-        i
-        for i in count()
-        if on_edge(data, y - i, x) or (i != 0 and data[y - i][x] >= height)
-    )
+    dist_right = trees_in_direction(data, height, y, x, y_mod=0, x_mod=+1)
+    dist_left = trees_in_direction(data, height, y, x, y_mod=0, x_mod=-1)
+    dist_down = trees_in_direction(data, height, y, x, y_mod=+1, x_mod=0)
+    dist_up = trees_in_direction(data, height, y, x, y_mod=-1, x_mod=0)
     return dist_down * dist_left * dist_right * dist_up
 
 
