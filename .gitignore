@@ -1,4 +1,5 @@
 target/
 .vscode/
 **/input
-**/example
+**/example*
+**/__pycache__/
