@@ -96,12 +96,6 @@ def part1(monkey_data: list[str]):
     for _ in range(20):
         for monkey in monkeys:
             monkey.inspect(part1=True)
-
-    # for m in monkeys:
-    #     print(f"Monkey {m.id}: {', '.join(map(str, m.items))}")
-    # for m in monkeys:
-    #     print(f"Monkey {m.id} inspected items {m.inspections} times.")
-
     sorted_inspections = sorted((m.inspections for m in monkeys), reverse=True)
     monkey_business = sorted_inspections[0] * sorted_inspections[1]
     print(monkey_business)
@@ -110,14 +104,9 @@ def part1(monkey_data: list[str]):
 def part2(monkey_data: list[str]):
     Monkey.reset_monkeys()
     monkeys = [Monkey.from_lines(l) for l in monkey_data]
-    assert all(m.div_lcm is monkeys[0].div_lcm for m in monkeys)
     for _ in range(10_000):
         for monkey in monkeys:
             monkey.inspect(part1=False)
-    # for m in monkeys:
-    #     print(f"Monkey {m.id}: {', '.join(map(str, m.items))}")
-    # for m in monkeys:
-    #     print(f"Monkey {m.id} inspected items {m.inspections} times.")
     sorted_inspections = sorted((m.inspections for m in monkeys), reverse=True)
     monkey_business = math.prod(sorted_inspections[:2])
     print(monkey_business)
