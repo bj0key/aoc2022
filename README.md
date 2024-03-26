@@ -12,7 +12,7 @@ Input files have obviously been left out of the repository, but if you wish to r
 |[4](day4)|✔|✔|
 |[5](day5)|✔|✔|
 |[6](day6)|✔|✔|
-|[7](day7)|✔|❌|
+|[7](day7)|✔|✔|
 |[8](day8)|✔|❌|
 |[9](day9)|✔|✔|
 |[10](day10)|✔|✔|
